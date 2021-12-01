@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import type { FC } from 'react';
 import { Search } from 'react-feather';
 import { connectSearchBox, VoiceSearch } from 'react-instantsearch-dom';
@@ -7,9 +8,9 @@ import styles from '../../../css/pages/search.css';
 import Image from '../../image';
 
 interface SearchBoxProps {
-  currentRefinement: number;
+  currentRefinement: string;
   refine: (event: string) => void;
-  [string: string]: any;
+  innerRef: any;
 }
 
 const SearchBox: FC<SearchBoxProps> = ({
@@ -17,7 +18,13 @@ const SearchBox: FC<SearchBoxProps> = ({
   refine,
   innerRef,
 }) => (
-  <div className="h-60 ph-16 bdr-4 d-flex ai-center bgc-grey-100 lg:ph-32 lg:h-80">
+  <form
+    onSubmit={(e) => e.preventDefault()}
+    action=""
+    role="search"
+    noValidate
+    className="h-60 ph-16 bdr-4 d-flex ai-center bgc-grey-100 lg:ph-32 lg:h-80"
+  >
     <button
       className="p-0 app-none bdw-0 bgc-transparent cursor-pointer"
       aria-label="Start searching"
@@ -33,7 +40,12 @@ const SearchBox: FC<SearchBoxProps> = ({
       css={styles.searchBox}
       className="ph-16 bgc-transparent fxg-1 color-grey-700 ff-poppins app-none bdw-0 fsz-16 lg:fsz-24"
       placeholder="Learn about search-as-a-service…"
-      type="text"
+      type="search"
+      autoComplete="off"
+      autoCorrect="off"
+      autoCapitalize="off"
+      spellCheck="false"
+      maxLength={512}
       value={currentRefinement}
       onChange={(event) => {
         refine(event.target.value);
@@ -44,15 +56,15 @@ const SearchBox: FC<SearchBoxProps> = ({
     )}
     <Image
       className="fxs-0 w-20 h-20 d-none xs:d-block sm:d-none"
-      src="shared/algolia_logo/algolia-blue-mark.svg"
+      src="/algolia-blue-mark.svg"
       alt="Algolia Logo"
     />
     <Image
       className="fxs-0 d-none sm:d-block"
-      src="search/search-by-algolia.svg"
+      src="/search-by-algolia.svg"
       alt="Search by Algolia"
     />
-  </div>
+  </form>
 );
 
 export default connectSearchBox(SearchBox);

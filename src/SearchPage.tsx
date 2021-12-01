@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import type { FC } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import algoliasearch from 'algoliasearch/lite';
@@ -39,96 +40,71 @@ import CustomHits, {
   CustomWebsiteInfiniteHits,
   CustomWebsiteHits,
 } from './components/pages/search/custom-hits';
+import { SearchState } from 'react-instantsearch-core';
 
 const previousPage = routes.HOME;
 
 const indexType = 'PROD_';
 const siteIndex = `${indexType}algolia_com_site`;
 
+const searchClient = algoliasearch(
+  '1QDAWL72TQ',
+  '47700f55d95d23f5a57744b9a027ea83'
+);
+
 const SearchPage: FC = () => {
   const searchBox = useRef<HTMLElement>();
-
-  // const router = useRouter();
-
-  const [debouncedSetState, setDebouncedSetState] = useState<ReturnType<
-    typeof setTimeout
-  > | null>(null);
-
-  // const [lastLocation, setLastLocation] = useState<any>(router);
-  const [searchState, setSearchState] = useState<Record<string, any>>(
+  const writeTimer = useRef<ReturnType<typeof setTimeout>>();
+  const [searchState, setSearchState] = useState<SearchState>(
     isBrowser ? (urlToSearchState(window.location) as any) : ''
   );
   const [tab, setTab] = useState<string>('');
 
-  const [{ searchClient }] = useState<{
-    searchClient: any;
-  }>(() => {
-    const algoliaClient = algoliasearch(
-      '1QDAWL72TQ',
-      '47700f55d95d23f5a57744b9a027ea83'
-    );
+  useEffect(() => {
+    if (!isBrowser) return;
+    window.addEventListener('popstate', (e) => {
+      setSearchState(urlToSearchState(window.location));
+    });
+  }, []);
 
-    return {
-      searchClient: algoliaClient,
-    };
-  });
+  const onSearchStateChange = (updatedSearchState: SearchState) => {
+    if (writeTimer.current) clearTimeout(writeTimer.current);
 
-  // useEffect(() => {
-  //   if (router.asPath !== lastLocation.asPath) {
-  //     setSearchState(urlToSearchState(window.location));
-  //     setLastLocation(router);
-  //   }
-  // }, [router, lastLocation.asPath]);
-
-  const onSearchStateChange = (updatedSearchState: { query: string }) => {
-    if (debouncedSetState) clearTimeout(debouncedSetState);
-
-    setDebouncedSetState();
-    // setTimeout(
-    //   () => router.push(searchStateToUrl(router, updatedSearchState)),
-    //   400
-    // )
+    if (isBrowser) {
+      writeTimer.current = setTimeout(
+        () =>
+          window.history.pushState(
+            {},
+            '',
+            searchStateToUrl(window.location, updatedSearchState)
+          ),
+        400
+      );
+    }
 
     setSearchState(updatedSearchState);
   };
 
   useEffect(() => {
-    if (isBrowser) {
-      const tmpTab = (getUrlParameter(window.location.search, 'tab') ||
-        'all') as string;
-      if (tmpTab !== tab) {
-        setTab(tmpTab.toLowerCase());
-      }
-
-      (searchBox.current as HTMLElement)?.focus();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (writeTimer.current) clearTimeout(writeTimer.current);
+  }, [tab]);
 
   useEffect(() => {
-    const closeSearch = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && router) {
-        router.push(previousPage);
+    if (isBrowser) {
+      const existingTab = (getUrlParameter(window.location.search, 'tab') ||
+        'all') as string;
+      if (existingTab !== tab) {
+        setTab(existingTab.toLowerCase());
       }
-    };
 
-    window.addEventListener('keydown', closeSearch);
-
-    return () => {
-      window.removeEventListener('keydown', closeSearch);
-    };
+      searchBox.current?.focus();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
-      <EmptyLayout
-        canonical={routes.SEARCH}
-        title="Search"
-        metaDescription="search"
-        url={routes.SEARCH}
-        hasSearchExperience
-      >
+      <EmptyLayout>
         <main css={styles.root} className="p-20 bgc-white mih-100vh">
           <div className="pb-80 pt-0 maw-1200 m-auto sm:pt-24 sm:pb-24 lg:pt-48 lg:pb-48">
             <header className="d-none sm:mb-24 sm:d-flex sm:jc-between sm:ai-center lg:mb-48">
@@ -152,16 +128,14 @@ const SearchPage: FC = () => {
               onSearchStateChange={onSearchStateChange}
               createURL={createURL}
             >
-              <Labels tab={tab} />
+              <Labels tab={tab} setTab={setTab} />
               <SearchBox innerRef={searchBox} />
               <QuerySuggestions />
               <Index indexName={siteIndex}>
                 <StateResults name="Website" tab={tab}>
                   <CustomHits
-                    infiniteHits={
-                      <CustomWebsiteInfiniteHits indexName={siteIndex} />
-                    }
-                    hits={<CustomWebsiteHits indexName={siteIndex} />}
+                    infiniteHits={<CustomWebsiteInfiniteHits />}
+                    hits={<CustomWebsiteHits />}
                   />
                 </StateResults>
                 <Configure

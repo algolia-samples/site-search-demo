@@ -1,4 +1,5 @@
-import type { MouseEvent as ReactMouseEvent, FC } from 'react';
+/** @jsxImportSource @emotion/react */
+import type { FC } from 'react';
 import { Fragment } from 'react';
 import { ChevronRight } from 'react-feather';
 import {
@@ -14,18 +15,14 @@ import TextLink from '../../../../components/text-link';
 import styles from '../../../../css/pages/search.css';
 import { isBrowser, setSessionStorageItem } from '../../../../helpers';
 import ShowMore from '../show-more';
+import { Hit } from 'react-instantsearch-core';
 
 interface WebsiteHitProps {
-  hit: {
-    path: string;
-    __queryID: string;
-    objectID: string;
-  };
+  hit: Hit;
   insights: (event: string, options: any) => void;
-  indexName: string;
 }
 
-const WebsiteHit: FC<WebsiteHitProps> = ({ hit, insights, indexName }) => (
+const WebsiteHit: FC<WebsiteHitProps> = ({ hit, insights }) => (
   <li>
     <TextLink
       onClick={() => {
@@ -34,7 +31,7 @@ const WebsiteHit: FC<WebsiteHitProps> = ({ hit, insights, indexName }) => (
           queryID: hit.__queryID,
           objectIDs: [hit.objectID],
         });
-        setSessionStorageItem('queryIndex', indexName);
+        setSessionStorageItem('queryIndex', hit.__indexName);
         setSessionStorageItem('queryID', hit.__queryID);
         setSessionStorageItem('queryObjectID', hit.objectID);
       }}
@@ -73,40 +70,28 @@ const WebsiteHit: FC<WebsiteHitProps> = ({ hit, insights, indexName }) => (
 );
 
 const ConnectedWebsiteHit = isBrowser
-  ? connectHitInsights(window.aa)(WebsiteHit)
-  : null;
+  ? connectHitInsights((window as any).aa)(WebsiteHit)
+  : () => null;
 
-interface WebsiteHitsProps {
-  hasMore: boolean;
-  hits: [
-    {
-      title1: string;
-    }
-  ];
-  indexName: string;
-  refine: (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => void;
-}
+export const CustomWebsiteInfiniteHits = connectInfiniteHits(
+  ({ hits, hasMore, refineNext }) => (
+    <>
+      <ul className="m-0 pl-20 color-nebula-500 d-grid ghgap-16 fsz-16 lh-big md:g-2 md:gvgap-80">
+        {hits.map((hit, index) => (
+          <ConnectedWebsiteHit key={index} hit={hit} />
+        ))}
+        <ShowMore hasMore={hasMore} refine={refineNext} />
+      </ul>
+    </>
+  )
+);
 
-const WebsiteHits: FC<WebsiteHitsProps> = ({
-  hits,
-  hasMore,
-  refine,
-  indexName,
-}) => (
+export const CustomWebsiteHits = connectHits(({ hits }) => (
   <>
     <ul className="m-0 pl-20 color-nebula-500 d-grid ghgap-16 fsz-16 lh-big md:g-2 md:gvgap-80">
       {hits.map((hit, index) => (
-        <ConnectedWebsiteHit
-          indexName={indexName}
-          key={`${hit.title1}-${index}`}
-          hit={hit}
-        />
+        <ConnectedWebsiteHit key={index} hit={hit} />
       ))}
-      <ShowMore hasMore={hasMore} refine={refine} />
     </ul>
   </>
-);
-
-export const CustomWebsiteInfiniteHits = connectInfiniteHits(WebsiteHits);
-
-export const CustomWebsiteHits = connectHits(WebsiteHits);
+));

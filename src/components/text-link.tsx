@@ -3,7 +3,7 @@ import cx from "classnames";
 
 import Link from "./link";
 
-const isInternalLink = (link) => {
+const isInternalLink = (link: string) => {
   const externalRoutes = [
     "blog",
     "dashboard",

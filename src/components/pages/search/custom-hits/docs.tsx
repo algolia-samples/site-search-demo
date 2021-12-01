@@ -1,4 +1,5 @@
-import type { MouseEvent as ReactMouseEvent, FC } from 'react';
+/** @jsxImportSource @emotion/react */
+import type { FC } from 'react';
 import { LabelText, Text } from '@algolia/ui-library';
 import {
   connectHitInsights,
@@ -61,28 +62,29 @@ const DocsHit: FC<DocsHitProps> = ({ hit, insights }) => (
 );
 
 const ConnectedDocHit = isBrowser
-  ? connectHitInsights(window.aa)(DocsHit)
-  : null;
+  ? connectHitInsights((window as any).aa)(DocsHit)
+  : () => null;
 
-interface DocsHitsProps {
-  hasMore: boolean;
-  hits: Array<{
-    h1: string;
-  }>;
-  refine: (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => void;
-}
 
-const DocsHits: FC<DocsHitsProps> = ({ hits, hasMore, refine }) => (
+export const CustomDocsInfiniteHits = connectInfiniteHits(
+  ({ hits, hasMore, refineNext }) => (
+    <>
+      <ul className="m-0 pl-20 color-nebula-500 lh-big d-grid ghgap-16 fsz-12 md:g-2 md:gvgap-80 lg:fsz-14">
+        {hits.map((hit, index) => (
+          <ConnectedDocHit key={`${hit.h1}-${index}`} hit={hit} />
+        ))}
+      </ul>
+      <ShowMore hasMore={hasMore} refine={refineNext} />
+    </>
+  )
+);
+
+export const CustomDocsHits = connectHits(({ hits }) => (
   <>
     <ul className="m-0 pl-20 color-nebula-500 lh-big d-grid ghgap-16 fsz-12 md:g-2 md:gvgap-80 lg:fsz-14">
       {hits.map((hit, index) => (
         <ConnectedDocHit key={`${hit.h1}-${index}`} hit={hit} />
       ))}
     </ul>
-    <ShowMore hasMore={hasMore} refine={refine} />
   </>
-);
-
-export const CustomDocsInfiniteHits = connectInfiniteHits(DocsHits);
-
-export const CustomDocsHits = connectHits(DocsHits);
+));

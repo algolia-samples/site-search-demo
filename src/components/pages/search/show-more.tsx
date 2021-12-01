@@ -1,4 +1,5 @@
-import type { FC, MouseEvent as ReactMouseEvent } from 'react';
+/** @jsxImportSource @emotion/react */
+import type { MouseEvent as ReactMouseEvent, FC } from 'react';
 
 interface ShowMoreProps {
   hasMore: boolean;

@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import type { FC } from 'react';
 import cx from 'classnames';
 import { connectSearchBox } from 'react-instantsearch-dom';

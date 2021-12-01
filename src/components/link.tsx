@@ -1,5 +1,5 @@
 import type { AnchorHTMLAttributes } from 'react';
-import { forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 
 // allow this component to accept all properties of "a" tag
 export interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -8,8 +8,10 @@ export interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
 }
 
 const Link = forwardRef(
-  ({ to, scroll = true, ...props }: LinkProps, ref: any) => (
-      <a {...props} href={to} ref={ref} />
+  ({ to, scroll = true, children, ...props }: LinkProps, ref: any) => (
+    <a {...props} href={to} ref={ref}>
+      {children}
+    </a>
   )
 );
 

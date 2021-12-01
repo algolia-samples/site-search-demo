@@ -1,4 +1,5 @@
-import type { MouseEvent as ReactMouseEvent, FC } from 'react';
+/** @jsxImportSource @emotion/react */
+import type { FC } from 'react';
 import { Text } from '@algolia/ui-library';
 import cx from 'classnames';
 import {
@@ -45,7 +46,6 @@ const BlogHit: FC<BlogHitProps> = ({ hit, insights }) => (
       <div>
         {hit.featured_media && (
           <Image
-            isCloudinary={false}
             css={styles.imgHeight}
             className="bdw-1 bdc-grey-100 bds-solid w-100p bdr-6 obf-cover bgc-grey-100"
             src={hit.featured_media}
@@ -69,7 +69,6 @@ const BlogHit: FC<BlogHitProps> = ({ hit, insights }) => (
           >
             {author.avatar_url && (
               <Image
-                isCloudinary={false}
                 className="bdr-max w-32 h-32 mr-8"
                 src={author.avatar_url}
                 alt={author.nickname}
@@ -97,28 +96,28 @@ const BlogHit: FC<BlogHitProps> = ({ hit, insights }) => (
 );
 
 const ConnectedBlogHit = isBrowser
-  ? connectHitInsights(window.aa)(BlogHit)
-  : null;
+  ? connectHitInsights((window as any).aa)(BlogHit)
+  : () => null;
 
-interface BlogHitsProps {
-  hasMore: boolean;
-  hits: Array<{
-    slug: string;
-  }>;
-  refine: (e: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => void;
-}
+export const CustomBlogInfiniteHits = connectInfiniteHits(
+  ({ hits, hasMore, refineNext }) => (
+    <>
+      <ul className="d-grid gvgap-20 ghgap-48 m-0 p-0 lis-none xs:g-2 sm:g-4">
+        {hits.map((hit) => (
+          <ConnectedBlogHit key={`${hit.slug}`} hit={hit} />
+        ))}
+      </ul>
+      <ShowMore hasMore={hasMore} refine={refineNext} />
+    </>
+  )
+);
 
-const BlogHits: FC<BlogHitsProps> = ({ hits, hasMore, refine }) => (
+export const CustomBlogHits = connectHits(({ hits }) => (
   <>
     <ul className="d-grid gvgap-20 ghgap-48 m-0 p-0 lis-none xs:g-2 sm:g-4">
       {hits.map((hit) => (
         <ConnectedBlogHit key={`${hit.slug}`} hit={hit} />
       ))}
     </ul>
-    <ShowMore hasMore={hasMore} refine={refine} />
   </>
-);
-
-export const CustomBlogInfiniteHits = connectInfiniteHits(BlogHits);
-
-export const CustomBlogHits = connectHits(BlogHits);
+));

@@ -1,19 +1,17 @@
+/** @jsxImportSource @emotion/react */
 import type { FC } from 'react';
 import cx from 'classnames';
 import { Heading3, Text } from '@algolia/ui-library';
 import { connectStateResults } from 'react-instantsearch-dom';
 
 import Pagination from './pagination';
+import type { StateResultsProvided } from 'react-instantsearch-core';
 
-interface StateResultsProps {
+type StateResultsProps = {
   name: string;
   tab: string;
-  searchResults: {
-    nbHits: number;
-    userData: UserDataType[];
-  };
-  viewMore: string;
-}
+  viewMore?: string;
+} & StateResultsProvided;
 
 const StateResults: FC<StateResultsProps> = ({
   children,
@@ -36,7 +34,7 @@ const StateResults: FC<StateResultsProps> = ({
         <Pagination viewMore={viewMore} name={name} />
       </header>
       {searchResults.nbHits !== 0 && children}
-      {searchResults.nbHits === 0 && !searchResults.userData && (
+      {searchResults.nbHits === 0 && (
         <Text className="m-0" small>
           There are no results for this query.
         </Text>
@@ -45,4 +43,4 @@ const StateResults: FC<StateResultsProps> = ({
   );
 };
 
-export default connectStateResults(StateResults);
+export default connectStateResults<StateResultsProps>(StateResults);

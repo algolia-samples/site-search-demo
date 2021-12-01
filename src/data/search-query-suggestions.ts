@@ -1,4 +1,4 @@
-export default [
+const suggestions = [
   'Search API',
   'Recommend API',
   'Personalization',
@@ -9,3 +9,5 @@ export default [
   'Mobile Search',
   'Ecommerce',
 ];
+
+export default suggestions;

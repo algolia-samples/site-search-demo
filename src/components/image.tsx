@@ -1,1 +1,8 @@
-export default function Image(props) {return <img {...props} />}
+import { ImgHTMLAttributes } from 'react';
+
+export default function Image({
+  alt,
+  ...props
+}: JSX.IntrinsicAttributes & ImgHTMLAttributes<HTMLImageElement>) {
+  return <img alt={alt} {...props} />;
+}

@@ -1,11 +1,15 @@
-import type { FC } from 'react';
-import { useState } from 'react';
+/** @jsxImportSource @emotion/react */
 import cx from 'classnames';
 import { Dropdown, DropdownItem, LabelText } from '@algolia/ui-library';
 
-import { capitalize, searchStateToUrl, urlToSearchState } from '../../../helpers';
-
-const indexType = 'PROD_';
+import {
+  capitalize,
+  getUrlParameter,
+  isBrowser,
+  searchStateToUrl,
+  urlToSearchState,
+} from '../../../helpers';
+import { SearchState } from 'react-instantsearch-core';
 
 const labels = [
   'all',
@@ -18,21 +22,18 @@ const labels = [
 
 interface LabelsProps {
   tab: string;
+  setTab: (tab: string) => void;
 }
 
-const Labels: FC<LabelsProps> = ({ tab }) => {
-  // const router = useRouter();
+const indexType = 'PROD_';
 
-  const [isLoading, setIsLoading] = useState(false);
-
-  const [debouncedSetState, setDebouncedSetState] = useState(null);
-
+function Labels({ tab, setTab }: LabelsProps) {
   const onLabelChange = (tabItem: string) => {
-   /* if (router.query.tab) {
-      const newQuery: {
-        tab: string;
-        indices?: { [key: string]: { page: number } };
-      } = {
+    setTab(tabItem);
+    if (!isBrowser) return;
+    const existingTab = getUrlParameter(window.location.search, 'tab');
+    if (existingTab) {
+      const newQuery: SearchState = {
         ...urlToSearchState(window.location),
         tab: tabItem,
       };
@@ -43,28 +44,21 @@ const Labels: FC<LabelsProps> = ({ tab }) => {
             newQuery.indices &&
             newQuery.indices[`${indexType}algolia_com${category}`]
           ) {
-            newQuery.indices[`${indexType}algolia_com${category}`].page = 1;
+            (
+              newQuery.indices[`${indexType}algolia_com${category}`] as any
+            ).page = 1;
           }
           return false;
         }
       );
-      router.push(searchStateToUrl(router, newQuery));
+      window.history.pushState(
+        {},
+        '',
+        searchStateToUrl(window.location, newQuery)
+      );
     } else {
-      router.push(`${router.pathname}?tab=${tabItem}`);
-    } */
-  };
-
-  const timeoutLabelChange = (tabItem: string) => {
-    clearTimeout(debouncedSetState as any);
-
-    setIsLoading(true);
-
-    setDebouncedSetState(
-      setTimeout(() => {
-        onLabelChange(tabItem);
-        setIsLoading(false);
-      }, 500) as any
-    );
+      window.history.pushState({}, '', `?tab=${tabItem}`);
+    }
   };
 
   return (
@@ -80,8 +74,7 @@ const Labels: FC<LabelsProps> = ({ tab }) => {
               )}
               tag="button"
               color="grey"
-              disabled={isLoading}
-              onClick={() => timeoutLabelChange(tabItem)}
+              onClick={() => onLabelChange(tabItem)}
             >
               {tabItem}
             </LabelText>
@@ -103,6 +96,6 @@ const Labels: FC<LabelsProps> = ({ tab }) => {
       </Dropdown>
     </>
   );
-};
+}
 
 export default Labels;

@@ -1,4 +1,5 @@
-import type { MouseEvent as ReactMouseEvent, FC } from 'react';
+/** @jsxImportSource @emotion/react */
+import type { FC } from 'react';
 import { LabelText, Text } from '@algolia/ui-library';
 import {
   connectHitInsights,
@@ -49,28 +50,28 @@ const LibraryHit: FC<LibraryHitProps> = ({ hit, insights }) => (
 );
 
 const ConnectedLibraryHit = isBrowser
-  ? connectHitInsights(window.aa)(LibraryHit)
-  : null;
+  ? connectHitInsights((window as any).aa)(LibraryHit)
+  : () => null;
 
-interface LibraryHitsProps {
-  hasMore: boolean;
-  hits: Array<{
-    h1: string;
-  }>;
-  refine: (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => void;
-}
+export const CustomLibraryInfiniteHits = connectInfiniteHits(
+  ({ hits, hasMore, refineNext }) => (
+    <>
+      <ul className="m-0 pl-20 color-nebula-500 lh-big d-grid ghgap-16 fsz-12 md:g-2 md:gvgap-80 lg:fsz-14">
+        {hits.map((hit, index) => (
+          <ConnectedLibraryHit key={`${hit.h1}-${index}`} hit={hit} />
+        ))}
+      </ul>
+      <ShowMore hasMore={hasMore} refine={refineNext} />
+    </>
+  )
+);
 
-const LibraryHits: FC<LibraryHitsProps> = ({ hits, hasMore, refine }) => (
+export const CustomLibraryHits = connectHits(({ hits }) => (
   <>
     <ul className="m-0 pl-20 color-nebula-500 lh-big d-grid ghgap-16 fsz-12 md:g-2 md:gvgap-80 lg:fsz-14">
       {hits.map((hit, index) => (
         <ConnectedLibraryHit key={`${hit.h1}-${index}`} hit={hit} />
       ))}
     </ul>
-    <ShowMore hasMore={hasMore} refine={refine} />
   </>
-);
-
-export const CustomLibraryInfiniteHits = connectInfiniteHits(LibraryHits);
-
-export const CustomLibraryHits = connectHits(LibraryHits);
+));

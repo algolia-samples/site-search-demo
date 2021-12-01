@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import type { ReactElement } from 'react';
 
 import * as breakpoints from '../../../../constants/breakpoints';
