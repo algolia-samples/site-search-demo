@@ -107,8 +107,6 @@ const SearchPage: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log(process.env)
-
   return (
     <>
       <EmptyLayout>
