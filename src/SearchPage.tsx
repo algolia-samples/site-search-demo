@@ -42,14 +42,19 @@ import CustomHits, {
 } from './components/pages/search/custom-hits';
 import { SearchState } from 'react-instantsearch-core';
 
+import config from './config'
+
 const previousPage = routes.HOME;
 
-const indexType = 'PROD_';
-const siteIndex = `${indexType}algolia_com_site`;
+const siteIndex = config.REACT_APP_ALGOLIA_SITE_INDEX;
+const blogIndex = config.REACT_APP_ALGOLIA_BLOG_INDEX;
+const resourcesIndex = config.REACT_APP_ALGOLIA_RESOURCES_INDEX;
+const docsIndex = config.REACT_APP_ALGOLIA_DOCS_INDEX;
+const inspirationIndex = config.REACT_APP_ALGOLIA_INSPIRATION_LIBRARY_INDEX;
 
 const searchClient = algoliasearch(
-  '1QDAWL72TQ',
-  '47700f55d95d23f5a57744b9a027ea83'
+  config.REACT_APP_ALGOLIA_APP_ID,
+  config.REACT_APP_ALGOLIA_API_KEY
 );
 
 const SearchPage: FC = () => {
@@ -102,6 +107,8 @@ const SearchPage: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  console.log(process.env)
+
   return (
     <>
       <EmptyLayout>
@@ -144,7 +151,7 @@ const SearchPage: FC = () => {
                   attributesToSnippet={['metaDescription:27']}
                 />
               </Index>
-              <Index indexName={`${indexType}algolia_com_site_resources-ubf`}>
+              <Index indexName={resourcesIndex}>
                 <StateResults
                   name="Resources"
                   viewMore={externalRoutes.RESOURCES}
@@ -161,7 +168,7 @@ const SearchPage: FC = () => {
                   snippetEllipsisText="…"
                 />
               </Index>
-              <Index indexName={`${indexType}algolia_blog`}>
+              <Index indexName={blogIndex}>
                 <StateResults
                   name="Blog"
                   viewMore={externalRoutes.BLOG}
@@ -179,7 +186,7 @@ const SearchPage: FC = () => {
                   snippetEllipsisText="…"
                 />
               </Index>
-              <Index indexName={`${indexType}algolia_com_doc`}>
+              <Index indexName={docsIndex}>
                 <StateResults
                   name="Docs"
                   viewMore={externalRoutes.DOC}
@@ -198,7 +205,7 @@ const SearchPage: FC = () => {
                   snippetEllipsisText="…"
                 />
               </Index>
-              <Index indexName={`${indexType}algolia_com-inspiration-library`}>
+              <Index indexName={inspirationIndex}>
                 <StateResults
                   name="Inspiration Library"
                   viewMore={routes.SEARCH_INSPIRATION_LIBRARY}
