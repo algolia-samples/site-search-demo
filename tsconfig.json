@@ -1,4 +1,4 @@
-{
+{"typeRoots": ["./global.d.ts", "./node_modules/@types"],
   "compilerOptions": {
     "target": "es5",
     "lib": [
