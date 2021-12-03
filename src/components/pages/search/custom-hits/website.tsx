@@ -16,6 +16,7 @@ import styles from '../../../../css/pages/search.css';
 import { isBrowser, setSessionStorageItem } from '../../../../helpers';
 import ShowMore from '../show-more';
 import { Hit } from 'react-instantsearch-core';
+import { HOME } from '../../../../constants/routes';
 
 interface WebsiteHitProps {
   hit: Hit;
@@ -36,7 +37,7 @@ const WebsiteHit: FC<WebsiteHitProps> = ({ hit, insights }) => (
         setSessionStorageItem('queryObjectID', hit.objectID);
       }}
       className="fw-bold d-block"
-      to={hit.path}
+      to={new URL(hit.path, HOME).toString()}
     >
       <Text className="m-0">
         <span className="d-block fw-bold lh-big fsz-16">

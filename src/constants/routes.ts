@@ -1,34 +1,34 @@
-const EMBED = '/embed/';
-const POLICIES = '/policies/';
+const EMBED = 'https://algolia.com/embed/';
+const POLICIES = 'https://algolia.com/policies/';
 
 /* Global */
 
-export const ABOUT = '/about/';
-export const ALGOLIA_VS_ELASTICSEARCH = '/algolia-vs-elasticsearch/';
-export const CAREERS = '/careers/';
+export const ABOUT = 'https://algolia.com/about/';
+export const ALGOLIA_VS_ELASTICSEARCH = 'https://algolia.com/algolia-vs-elasticsearch/';
+export const CAREERS = 'https://algolia.com/careers/';
 export const COMPARE_ALGOLIA_VS_ELASTICSEARCH =
-  '/compare-algolia-vs-elasticsearch/';
-export const CONTACT_US = '/contactus/';
-export const COVID_19 = '/covid-19/';
-export const DEMO_REQUEST = '/demorequest/';
-export const DEVELOPERS = '/developers/';
-export const DISTRIBUTED_SECURE = '/distributed-secure/';
+  'https://algolia.com/compare-algolia-vs-elasticsearch/';
+export const CONTACT_US = 'https://algolia.com/contactus/';
+export const COVID_19 = 'https://algolia.com/covid-19/';
+export const DEMO_REQUEST = 'https://algolia.com/demorequest/';
+export const DEVELOPERS = 'https://algolia.com/developers/';
+export const DISTRIBUTED_SECURE = 'https://algolia.com/distributed-secure/';
 export const ERROR = '404';
-export const EVENTS = '/events/';
-export const FOR_OPEN_SOURCE = '/for-open-source/';
-export const HOME = '/';
-export const PRESS = '/press/';
-export const PRICING = '/pricing/';
-export const PRODUCTS = '/products/';
-export const REDEEM = '/redeem/';
-export const SEARCH = '/search/';
-export const SEARCH_INSPIRATION_LIBRARY = '/search-inspiration-library/';
+export const EVENTS = 'https://algolia.com/events/';
+export const FOR_OPEN_SOURCE = 'https://algolia.com/for-open-source/';
+export const HOME = 'https://algolia.com/';
+export const PRESS = 'https://algolia.com/press/';
+export const PRICING = 'https://algolia.com/pricing/';
+export const PRODUCTS = 'https://algolia.com/products/';
+export const REDEEM = 'https://algolia.com/redeem/';
+export const SEARCH = 'https://algolia.com/search/';
+export const SEARCH_INSPIRATION_LIBRARY = 'https://algolia.com/search-inspiration-library/';
 export const SEARCH_AND_DISCOVERY = `${PRODUCTS}search-and-discovery/`;
-export const SOCIAL_IMPACT = '/social-impact/';
-export const SOLUTIONS = '/search-solutions/';
-export const STATE_OF_SEARCH = '/state-of-site-search-and-discovery/';
-export const SUPPORT = '/support/';
-export const WHY = '/why/';
+export const SOCIAL_IMPACT = 'https://algolia.com/social-impact/';
+export const SOLUTIONS = 'https://algolia.com/search-solutions/';
+export const STATE_OF_SEARCH = 'https://algolia.com/state-of-site-search-and-discovery/';
+export const SUPPORT = 'https://algolia.com/support/';
+export const WHY = 'https://algolia.com/why/';
 
 /* Developers */
 

@@ -11,6 +11,7 @@ import {
 
 import { isBrowser } from '../../../../helpers';
 import ShowMore from '../show-more';
+import { HOME } from '../../../../constants/routes';
 
 interface DocsHitProps {
   hit: {
@@ -32,7 +33,7 @@ const DocsHit: FC<DocsHitProps> = ({ hit, insights }) => (
         })
       }
       className="td-none d-block"
-      href={hit.path}
+      href={new URL(hit.path, HOME).toString()}
     >
       <Text className="m-0 lh-big" small>
         <span className="fw-bold">
@@ -64,7 +65,6 @@ const DocsHit: FC<DocsHitProps> = ({ hit, insights }) => (
 const ConnectedDocHit = isBrowser
   ? connectHitInsights((window as any).aa)(DocsHit)
   : () => null;
-
 
 export const CustomDocsInfiniteHits = connectInfiniteHits(
   ({ hits, hasMore, refineNext }) => (
