@@ -1,9 +1,3 @@
-import path from "path";
-import dotenv from "dotenv";
-
-// Parsing the env file.
-dotenv.config({ path: path.resolve(__dirname, "../config/config.env") });
-
 // Interface to load env variables
 // Note these variables can possibly be undefined
 // as someone could skip these varibales or not setup a .env file at all
